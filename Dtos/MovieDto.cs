@@ -2,7 +2,6 @@
 {
     public class MovieDto
     {
-        public int Id { get; set; }
         public string Title { get; set; } = "";
         public string OriginalTitle { get; set; } = "";
         public double VoteAverage { get; set; }

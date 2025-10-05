@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Microsoft.Extensions.Caching.Memory;
+using System.Text.Json.Serialization;
 using TmdbAppApi.Dtos;
 
 namespace TmdbAppApi.Services;
@@ -7,16 +8,24 @@ public class TmdbService : ITmdbService
 {
     private readonly HttpClient _http;
     private readonly string _apiKey;
+    private readonly IMemoryCache _cache;
 
-    public TmdbService(HttpClient http, IConfiguration config)
+    public TmdbService(HttpClient http, IConfiguration config, IMemoryCache cache)
     {
         _http = http;
+        _cache = cache;
         _apiKey = config["TMDB:ApiKey"]
                   ?? throw new InvalidOperationException("TMDB:ApiKey no configurada.");
     }
 
     public async Task<MovieDto?> GetMovieByTitle(string title)
     {
+        var cacheKey = $"movie:{title.ToLower()}";
+
+        var cachedMovie = _cache.Get<MovieDto>(cacheKey);
+        if (cachedMovie is not null)
+            return cachedMovie;
+
         string url = $"search/movie?api_key={_apiKey}&query={Uri.EscapeDataString(title)}&page=1";
         var response = await _http.GetFromJsonAsync<TmdbPagedResponse<TmdbMovie>>(url)
           ?? new TmdbPagedResponse<TmdbMovie>();
@@ -28,6 +37,8 @@ public class TmdbService : ITmdbService
 
         var dto = MapToDto(first);
         dto.SimilarMovies = await GetSimilarMovies(first.Id);
+
+        _cache.Set(cacheKey, dto, TimeSpan.FromSeconds(10));
 
         return dto;
     }
@@ -56,7 +67,6 @@ public class TmdbService : ITmdbService
 
     private static MovieDto MapToDto(TmdbMovie tmdbMovie) => new()
     {
-        Id = tmdbMovie.Id,
         Title = tmdbMovie.Title ?? "",
         OriginalTitle = tmdbMovie.OriginalTitle ?? "",
         VoteAverage = tmdbMovie.VoteAverage,

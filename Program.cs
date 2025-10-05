@@ -11,6 +11,8 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
 
+        builder.Services.AddMemoryCache();
+
         builder.Services.AddHttpClient<ITmdbService, TmdbService>(c =>
         {
             c.BaseAddress = new Uri("https://api.themoviedb.org/3/");
