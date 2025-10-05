@@ -8,5 +8,6 @@
         public double VoteAverage { get; set; }
         public string? ReleaseDate { get; set; }
         public string Overview { get; set; } = "";
+        public List<string> SimilarMovies { get; set; } = new();
     }
 }

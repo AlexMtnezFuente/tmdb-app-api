@@ -17,7 +17,7 @@ public class TmdbService : ITmdbService
 
     public async Task<MovieDto?> GetMovieByTitle(string title)
     {
-        var url = $"search/movie?api_key={_apiKey}&query={Uri.EscapeDataString(title)}&page=1";
+        string url = $"search/movie?api_key={_apiKey}&query={Uri.EscapeDataString(title)}&page=1";
         var response = await _http.GetFromJsonAsync<TmdbPagedResponse<TmdbMovie>>(url)
           ?? new TmdbPagedResponse<TmdbMovie>();
         var first = response?.Results?.FirstOrDefault();
@@ -26,7 +26,32 @@ public class TmdbService : ITmdbService
             return null;
         }
 
-        return MapToDto(first);
+        var dto = MapToDto(first);
+        dto.SimilarMovies = await GetSimilarMovies(first.Id);
+
+        return dto;
+    }
+
+    private async Task<List<string>> GetSimilarMovies(int movieId, int maxResults = 5)
+    {
+        var url = $"movie/{movieId}/similar?api_key={_apiKey}&page=1";
+        var result = await _http.GetFromJsonAsync<TmdbPagedResponse<TmdbMovie>>(url);
+
+        if (result?.Results == null)
+        {
+            return new();
+        }
+
+        return result.Results
+            .Take(maxResults)
+            .Select(movie =>
+            {
+                var year = !string.IsNullOrWhiteSpace(movie.ReleaseDate) && movie.ReleaseDate.Length >= 4
+                    ? movie.ReleaseDate[..4]
+                    : "N/A";
+                return $"{movie.Title} ({year})";
+            })
+            .ToList();
     }
 
     private static MovieDto MapToDto(TmdbMovie tmdbMovie) => new()
