@@ -1,0 +1,6 @@
+@TmdbAppApi_HostAddress = http://localhost:5193
+
+GET {{TmdbAppApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
