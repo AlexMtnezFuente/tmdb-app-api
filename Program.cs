@@ -1,4 +1,5 @@
 using TmdbAppApi.Services;
+using DotNetEnv;
 
 namespace TmdbAppApi;
 
@@ -6,6 +7,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        Env.Load();
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();

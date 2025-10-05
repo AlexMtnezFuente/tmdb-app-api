@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "f1cdb6d2-3bf1-478f-86bf-4b2bbe51872c",
+		"name": "TmdbAppApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6078505"
+	},
+	"item": [
+		{
+			"name": "Get By Title",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5193/movies/by-title?title=your name",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5193",
+					"path": [
+						"movies",
+						"by-title"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "your name"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

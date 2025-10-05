@@ -1,0 +1,8 @@
+services:
+  api:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "5194:8080"
+    restart: unless-stopped

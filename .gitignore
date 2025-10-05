@@ -25,3 +25,4 @@ project.nuget.cache
 # Configuración local
 *.dbmdl
 *.userosscache
+.env
