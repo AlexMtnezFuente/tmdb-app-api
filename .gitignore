@@ -1,0 +1,27 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build results
+bin/
+obj/
+
+# NuGet
+*.nupkg
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.assets.json
+project.nuget.cache
+
+# Logs
+*.log
+
+# Otros temporales
+*.tmp
+*.bak
+
+# Configuración local
+*.dbmdl
+*.userosscache
