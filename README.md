@@ -14,3 +14,10 @@ Create a `.env` file in the project root:
 
 ```env
 TMDB__ApiKey=REPLACE_WITH_YOUR_TMDB_API_KEY
+
+## Run with Docker Compose
+
+From the project root (where `docker-compose.yml` lives), start the API in the background:
+
+```bash
+docker compose up -d
