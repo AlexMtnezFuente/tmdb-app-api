@@ -43,26 +43,27 @@ public class TmdbService : ITmdbService
         return dto;
     }
 
-    private async Task<List<string>> GetSimilarMovies(int movieId, int maxResults = 5)
+    private async Task<string> GetSimilarMovies(int movieId, int maxResults = 5)
     {
         var url = $"movie/{movieId}/similar?api_key={_apiKey}&page=1";
         var result = await _http.GetFromJsonAsync<TmdbPagedResponse<TmdbMovie>>(url);
 
-        if (result?.Results == null)
+        if (result?.Results == null || result.Results.Count == 0)
         {
-            return new();
-        }
+            return string.Empty;
+        } 
 
-        return result.Results
-            .Take(maxResults)
-            .Select(movie =>
-            {
-                var year = !string.IsNullOrWhiteSpace(movie.ReleaseDate) && movie.ReleaseDate.Length >= 4
-                    ? movie.ReleaseDate[..4]
-                    : "N/A";
-                return $"{movie.Title} ({year})";
-            })
-            .ToList();
+        var movies = result.Results
+        .Take(maxResults)
+        .Select(movie =>
+        {
+            var year = !string.IsNullOrWhiteSpace(movie.ReleaseDate) && movie.ReleaseDate.Length >= 4
+                ? movie.ReleaseDate[..4]
+                : "N/A";
+            return $"{movie.Title} ({year})";
+        })
+        .ToList();
+        return string.Join(", ", movies);
     }
 
     private static MovieDto MapToDto(TmdbMovie tmdbMovie) => new()
