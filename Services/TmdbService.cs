@@ -24,7 +24,9 @@ public class TmdbService : ITmdbService
 
         var cachedMovie = _cache.Get<MovieDto>(cacheKey);
         if (cachedMovie is not null)
+        {
             return cachedMovie;
+        } 
 
         string url = $"search/movie?api_key={_apiKey}&query={Uri.EscapeDataString(title)}&page=1";
         var response = await _http.GetFromJsonAsync<TmdbPagedResponse<TmdbMovie>>(url)
@@ -71,7 +73,7 @@ public class TmdbService : ITmdbService
         Title = tmdbMovie.Title ?? "",
         OriginalTitle = tmdbMovie.OriginalTitle ?? "",
         VoteAverage = tmdbMovie.VoteAverage,
-        ReleaseDate = tmdbMovie.ReleaseDate,
+        ReleaseDate = tmdbMovie.ReleaseDate ?? "",
         Overview = tmdbMovie.Overview ?? ""
     };
 

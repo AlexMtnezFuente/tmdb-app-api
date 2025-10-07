@@ -14,6 +14,6 @@ public class MoviesController : ControllerBase
     public async Task<ActionResult<MovieDto>> GetByTitle([FromQuery] string title)
     {
         var movie = await _tmdbService.GetMovieByTitle(title);
-        return movie is null ? NotFound() : Ok(movie);
+        return movie is null ? NotFound("Movie not found") : Ok(movie);
     }
 }
