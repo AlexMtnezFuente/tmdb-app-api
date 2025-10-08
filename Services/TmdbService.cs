@@ -40,7 +40,7 @@ public class TmdbService : ITmdbService
         var dto = MapToDto(first);
         dto.SimilarMovies = await GetSimilarMovies(first.Id);
 
-        _cache.Set(cacheKey, dto, TimeSpan.FromSeconds(10));
+        _cache.Set(cacheKey, dto, TimeSpan.FromMinutes(10));
 
         return dto;
     }
