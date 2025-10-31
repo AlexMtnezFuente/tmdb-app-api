@@ -3,6 +3,9 @@
 *.user
 *.suo
 
+# Visual Studio Code
+.vscode/
+
 # Build results
 bin/
 obj/
@@ -22,7 +25,7 @@ project.nuget.cache
 *.tmp
 *.bak
 
-# Configuración local
+# Configuraciï¿½n local
 *.dbmdl
 *.userosscache
 .env

@@ -2,13 +2,13 @@
 using TmdbAppApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
+namespace TmdbAppApi.Controllers;
+
 [ApiController]
 [Route("[controller]")]
-public class MoviesController : ControllerBase
+public class MoviesController(ITmdbService tmdbService) : ControllerBase
 {
-    private readonly ITmdbService _tmdbService;
-
-    public MoviesController(ITmdbService tmdbService) => _tmdbService = tmdbService;
+    private readonly ITmdbService _tmdbService = tmdbService;
 
     [HttpGet("by-title")]
     public async Task<ActionResult<MovieDto>> GetByTitle([FromQuery] string title)

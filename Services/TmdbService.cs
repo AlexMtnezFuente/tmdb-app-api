@@ -4,19 +4,12 @@ using TmdbAppApi.Dtos;
 
 namespace TmdbAppApi.Services;
 
-public class TmdbService : ITmdbService
+public class TmdbService(HttpClient http, IConfiguration config, IMemoryCache cache) : ITmdbService
 {
-    private readonly HttpClient _http;
-    private readonly string _apiKey;
-    private readonly IMemoryCache _cache;
-
-    public TmdbService(HttpClient http, IConfiguration config, IMemoryCache cache)
-    {
-        _http = http;
-        _cache = cache;
-        _apiKey = config["TMDB:ApiKey"]
+    private readonly HttpClient _http = http;
+    private readonly string _apiKey = config["TMDB:ApiKey"]
                   ?? throw new InvalidOperationException("TMDB:ApiKey no configurada.");
-    }
+    private readonly IMemoryCache _cache = cache;
 
     public async Task<MovieDto?> GetMovieByTitle(string title)
     {
@@ -26,7 +19,7 @@ public class TmdbService : ITmdbService
         if (cachedMovie is not null)
         {
             return cachedMovie;
-        } 
+        }
 
         string url = $"search/movie?api_key={_apiKey}&query={Uri.EscapeDataString(title)}&page=1";
         var response = await _http.GetFromJsonAsync<TmdbPagedResponse<TmdbMovie>>(url)
@@ -53,7 +46,7 @@ public class TmdbService : ITmdbService
         if (result?.Results == null || result.Results.Count == 0)
         {
             return string.Empty;
-        } 
+        }
 
         var movies = result.Results
         .Take(maxResults)
@@ -79,7 +72,6 @@ public class TmdbService : ITmdbService
 
     private sealed class TmdbPagedResponse<T>
     {
-        public int Page { get; set; }
         [JsonPropertyName("results")] public List<T> Results { get; set; } = new();
     }
 
